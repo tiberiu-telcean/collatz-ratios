@@ -1,12 +1,13 @@
 #include <cstdio>
 #include <cmath>
 #include <vector>
+#include <unistd.h>
 #include <cstdint>
 
-int64_t last_to_check = 110000;
+int64_t last_to_check = 10000;
 std::vector<int64_t> numbers_checked;
 std::vector<double> ratios;
-//std::vector<int64_t> list_of_lengths;
+std::vector<int64_t> list_of_lengths;
 std::vector<int64_t> lowest_ratios;
 
 void collatz(int64_t input){
@@ -21,7 +22,7 @@ void collatz(int64_t input){
 	    lenght++;
 	}
     }
-    //list_of_lengths.push_back(lenght);
+    list_of_lengths.push_back(lenght);
     ratios.push_back(log2(input)/lenght);
     numbers_checked.push_back(input);
 }
@@ -39,4 +40,29 @@ int main(int argc, char** argv){
 	    lowest_ratios.push_back(numbers_checked[i-2]);
 	}
     }
+    FILE* csv = fopen("collatz_lengths.csv", "w");
+    for(int64_t i=0; i<numbers_checked.size(); i++){
+	if(i){
+	    fprintf(csv, ",%d", numbers_checked[i]);
+	}else{
+	    fprintf(csv, "%d", numbers_checked[i]);
+	}
+    }
+    fprintf(csv, "\n");
+    for(int64_t i=0; i<list_of_lengths.size(); i++){
+	if(i){
+	    fprintf(csv, ",%d", list_of_lengths[i]);
+	}else{
+	    fprintf(csv, "%d", list_of_lengths[i]);
+	}
+    }
+    fprintf(csv, "\n");
+    for(int64_t i=0; i<ratios.size(); i++){
+	if(i){
+	    fprintf(csv, ",%f", ratios[i]);
+	}else{
+	    fprintf(csv, "%f", ratios[i]);
+	}
+    }
+    fprintf(csv, "\n");
 }
